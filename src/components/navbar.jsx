@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react"
 import { Link, Outlet, useNavigate } from "react-router-dom"
-import { UserContext } from "../App"
+import { ThemeContext, UserContext } from "../App"
 import UserNavigationPanel from "./user-navigation"
 import axios from "axios"
+import { storeInSession } from "../common/session"
 const Navbar = () => {
 
     const navigate = useNavigate()
@@ -10,6 +11,8 @@ const Navbar = () => {
     const [userNavPanel, setUserNavPanel] = useState(false)
 
     const { userAuth, userAuth: { access_token, profile_img, new_notification_available }, setUserAuth } = useContext(UserContext)
+
+    let { theme, setTheme } = useContext(ThemeContext)
 
     useEffect(() => {
         if (access_token) {
@@ -35,6 +38,15 @@ const Navbar = () => {
         setTimeout(() => {
             setUserNavPanel(false)
         }, 200)
+    }
+
+    const changeTheme = () => {
+        let newTheme = theme == 'light' ? 'dark' : 'light'
+        setTheme(newTheme)
+
+        document.body.setAttribute("data-theme", newTheme)
+
+        storeInSession("theme", newTheme)
     }
 
     const handleSearch = (e) => {
@@ -73,6 +85,13 @@ const Navbar = () => {
                         <i className="fi fi-rr-file-edit"></i>
                         <p>Write</p>
                     </Link>
+
+                    <button 
+                        className="relative w-12 h-12 rounded-full bg-grey hover:bg-black/10"
+                        onClick={changeTheme}
+                    >
+                        <i className={"fi fi-rr-" + (theme == 'light' ? "moon" : "brightness")  + " text-2xl block mt-1"}></i>
+                    </button>
 
                     {
                         access_token ? 

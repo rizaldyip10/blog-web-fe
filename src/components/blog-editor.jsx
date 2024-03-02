@@ -4,13 +4,16 @@ import { Toaster, toast } from "react-hot-toast"
 import { uploadImage } from "../common/aws"
 import { EditorContext } from "../pages/editor-page"
 import AnimationWrapper from "../common/page-animation"
-import defaultBanner from "../images/blog-banner.png"
+import defaultBannerLight from "../images/blog-banner-light.png"
+import defaultBannerDark from "../images/blog-banner-dark.png"
 import EditorJS from "@editorjs/editorjs"
 import { tools } from "./tools-component"
 import axios from "axios"
-import { UserContext } from "../App"
+import { ThemeContext, UserContext } from "../App"
 
 const BlogEditor = () => {
+
+    let { theme } = useContext(ThemeContext)
 
     let { blog, blog: { title, banner, content, tags, des }, setBlog, textEditor, setTextEditor, setEditorState } = useContext(EditorContext)
 
@@ -70,7 +73,7 @@ const BlogEditor = () => {
     const handleError = (e) => {
         let img = e.target
 
-        img.src = defaultBanner
+        img.src = theme == 'light' ? defaultBannerLight : defaultBannerDark
     }
 
     const handlePublishEvent = () => {
@@ -121,7 +124,7 @@ const BlogEditor = () => {
                     toast.success("Your blog is saved to draft")
         
                     setTimeout(() => {
-                        navigate("/")
+                        navigate("/dashboard/blogs?tab=draft")
                     }, 500)
                 })
                 .catch(({ response }) => {
@@ -183,7 +186,7 @@ const BlogEditor = () => {
                         <textarea
                             defaultValue={title}
                             placeholder="Blog Title"
-                            className="text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-40"
+                            className="text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-40 bg-white"
                             onKeyDown={handleTitleKeyDown}
                             onChange={handleTitleChange}
                         />

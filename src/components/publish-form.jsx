@@ -95,7 +95,7 @@ const PublishForm = () => {
             toast.success("Your blog is published")
 
             setTimeout(() => {
-                navigate("/")
+                navigate("/dashboard/blogs")
             }, 500)
         })
         .catch(({ response }) => {
